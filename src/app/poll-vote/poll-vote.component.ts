@@ -6,12 +6,15 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import ApexCharts from 'apexcharts';
 import { PollVote } from '../types';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-poll-vote',
+  imports: [CommonModule, ReactiveFormsModule],
+  
   templateUrl: './poll-vote.component.html',
   styleUrls: ['./poll-vote.component.scss'],
 })

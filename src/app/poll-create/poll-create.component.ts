@@ -1,9 +1,11 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PollForm } from '../types';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-poll-create',
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './poll-create.component.html',
   styleUrls: ['./poll-create.component.scss'],
 })

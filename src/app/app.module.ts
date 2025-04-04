@@ -1,7 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
 import { PollCreateComponent } from './poll-create/poll-create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PollComponent } from './poll/poll.component';
@@ -11,13 +9,11 @@ import { Web3Service } from './blockchain/web3.service';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    PollCreateComponent,
-    PollComponent,
-    PollVoteComponent,
   ],
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, PollCreateComponent,
+    PollComponent,
+    PollVoteComponent,],
   providers: [PollService, Web3Service],
-  bootstrap: [AppComponent],
+  bootstrap: [],
 })
 export class AppModule {}

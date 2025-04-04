@@ -11,8 +11,9 @@ declare var window: any;
 })
 export class Web3Service {
   private web3: Web3;
-  private contract: Contract;
-  private contractAddress = '0x4BC34D55078a2858F3Bd91B209Da46BA01AE9986';
+  private contract: Contract<any>;
+
+  private contractAddress = '0x6B922D64A8a914465E2F62f296A4051ec20cf9b6';
 
   constructor(private zone: NgZone) {
     if (window.web3) {
@@ -49,7 +50,6 @@ export class Web3Service {
   onEvents(event: string) {
     return new Observable((observer) => {
       this.contract.events[event]().on('data', (data) => {
-        // THIS MUST RUN INSIDE ANGULAR ZONE AS IT'S LISTENING FOR 'ON'
         this.zone.run(() => {
           observer.next({
             event: data.event,

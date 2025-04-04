@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Poll, PollForm } from '../types';
 import { Web3Service } from '../blockchain/web3.service';
-import { fromAscii, toAscii } from 'web3-utils';
+import { toAscii } from 'web3-utils';
+import Web3 from 'web3';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,8 @@ export class PollService {
   async getPolls(): Promise<Poll[]> {
     const polls: Poll[] = [];
 
-    const totalPolls = await this.web3.call('getTotalPolls');
+    const totalPolls = parseInt((await this.web3.call('getTotalPolls')) as any);
+
     const acc = await this.web3.getAccount();
     const voter = await this.web3.call('getVoter', acc);
     const voterNormalized = this.normalizeVoter(voter);
@@ -31,11 +33,15 @@ export class PollService {
   }
 
   createPoll(poll: PollForm) {
+    const optionsBytes32 = poll.options.map(
+      (opt) => Web3.utils.fromAscii(opt).padEnd(66, '0') // Pad to 32 bytes (66 chars incl. 0x)
+    );
+
     this.web3.executeTransaction(
       'createPoll',
       poll.question,
       poll.thumbnail || '',
-      poll.options.map((opt) => fromAscii(opt))
+      optionsBytes32
     );
   }
 
