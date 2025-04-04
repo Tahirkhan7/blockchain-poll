@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PollForm } from '../types';
 
 @Component({
   selector: 'app-poll-create',
-  standalone: true,
-  imports: [ReactiveFormsModule],
   templateUrl: './poll-create.component.html',
-  styleUrl: './poll-create.component.scss'
+  styleUrls: ['./poll-create.component.scss'],
 })
 export class PollCreateComponent {
   pollForm: FormGroup;
+
+  @Output() pollCreated: EventEmitter<PollForm> = new EventEmitter();
+
   constructor(private fb: FormBuilder) {
     this.pollForm = this.fb.group({
-      question: this.fb.control('', Validators.required),
-      image: this.fb.control('', Validators.required),
+      question: this.fb.control('', [Validators.required]),
+      image: this.fb.control(''),
       op1: this.fb.control(''),
       op2: this.fb.control(''),
       op3: this.fb.control(''),
@@ -21,6 +23,16 @@ export class PollCreateComponent {
   }
 
   submitForm() {
-    console.log(this.pollForm.value);
+    const formData: PollForm = {
+      question: this.pollForm.get('question').value,
+      thumbnail: this.pollForm.get('image').value,
+      options: [
+        this.pollForm.get('op1').value,
+        this.pollForm.get('op2').value,
+        this.pollForm.get('op3').value,
+      ],
+    };
+
+    this.pollCreated.emit(formData);
   }
 }

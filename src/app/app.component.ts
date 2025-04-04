@@ -1,37 +1,39 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { PollCreateComponent } from './poll-create/poll-create.component';
-import { PollComponent } from './poll/poll.component';
-import { NgIf, NgFor } from '@angular/common';
+import { Poll, PollForm, PollVote } from './types';
+import { PollService } from './poll-service/poll.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, PollCreateComponent, NgIf, PollComponent, NgFor],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   showForm = false;
+  activePoll: Poll = null;
 
-  polls = [
-    {
-      question: 'What is the best programming language?',
-      image: 'https://picsum.photos/375/100',
-      votes: [0, 5, 7, 1],
-      voted: true,
-    },
-    {
-      question: 'What is the best programming language?',
-      image: 'https://picsum.photos/375/100',
-      votes: [1, 2, 3, 4, 5],
-      voted: false,
-    },
-    {
-      question: 'What is the best programming language?',
-      image: 'https://picsum.photos/375/100',
-      votes: [9, 6, 3],
-      voted: true,
-    },
-  ];
+  polls = this.ps.getPolls();
+
+  constructor(private ps: PollService) {}
+
+  ngOnInit() {
+    this.ps.onEvent('PollCreated').subscribe(() => {
+      this.polls = this.ps.getPolls();
+    });
+  }
+
+  setActivePoll(poll) {
+    this.activePoll = null;
+
+    setTimeout(() => {
+      this.activePoll = poll;
+    }, 100);
+  }
+
+  handlePollCreate(poll: PollForm) {
+    this.ps.createPoll(poll);
+  }
+
+  handlePollVote(pollVoted: PollVote) {
+    this.ps.vote(pollVoted.id, pollVoted.vote);
+  }
 }
